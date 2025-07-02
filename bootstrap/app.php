@@ -10,7 +10,7 @@ $app = new Application(
 // تسجيل Service Providers الأساسية
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
+    class_exists(App\Http\KernelFixed::class) ? App\Http\KernelFixed::class : App\Http\Kernel::class
 );
 
 $app->singleton(
