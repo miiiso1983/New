@@ -100,6 +100,9 @@ $app->singleton('files', function () {
     return new \Illuminate\Filesystem\Filesystem();
 });
 
+// تسجيل Facade Application
+\Illuminate\Support\Facades\Facade::setFacadeApplication($app);
+
 // تسجيل Service Providers الأساسية المطلوبة
 $app->register(\Illuminate\Foundation\Providers\FoundationServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
