@@ -70,6 +70,23 @@ $config->set('session', [
 // تسجيل config في التطبيق
 $app->instance('config', $config);
 
+// تسجيل files service يدوياً
+$app->singleton('files', function () {
+    return new \Illuminate\Filesystem\Filesystem();
+});
+
+// تسجيل Service Providers الأساسية المطلوبة
+$app->register(\Illuminate\Foundation\Providers\FoundationServiceProvider::class);
+$app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->register(\Illuminate\Database\DatabaseServiceProvider::class);
+$app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
+$app->register(\Illuminate\View\ViewServiceProvider::class);
+$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
+$app->register(\Illuminate\Auth\AuthServiceProvider::class);
+$app->register(\Illuminate\Hashing\HashServiceProvider::class);
+$app->register(\Illuminate\Translation\TranslationServiceProvider::class);
+
 // تسجيل الخدمات الأساسية
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
@@ -85,5 +102,13 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+
+// تسجيل Application Service Providers
+if (class_exists('App\Providers\AppServiceProvider')) {
+    $app->register(App\Providers\AppServiceProvider::class);
+}
+if (class_exists('App\Providers\RouteServiceProvider')) {
+    $app->register(App\Providers\RouteServiceProvider::class);
+}
 
 return $app;
