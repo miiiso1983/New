@@ -7,10 +7,30 @@ $app = new Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+// تسجيل config repository يدوياً قبل أي شيء آخر
+$app->singleton('config', function () {
+    return new \Illuminate\Config\Repository();
+});
+
+// تحميل ملفات الإعدادات
+$configPath = $app->configPath();
+if (is_dir($configPath)) {
+    $config = $app->make('config');
+
+    // تحميل ملفات الإعدادات الأساسية
+    $configFiles = ['app', 'database', 'session', 'cache', 'filesystems'];
+    foreach ($configFiles as $configFile) {
+        $configFilePath = $configPath . '/' . $configFile . '.php';
+        if (file_exists($configFilePath)) {
+            $config->set($configFile, require $configFilePath);
+        }
+    }
+}
+
 // تسجيل Service Providers الأساسية
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    class_exists(App\Http\KernelFixed::class) ? App\Http\KernelFixed::class : App\Http\Kernel::class
+    App\Http\Kernel::class
 );
 
 $app->singleton(
