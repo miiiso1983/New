@@ -49,7 +49,7 @@ $config->set('session', [
     'cookie' => 'laravel_session',
     'path' => '/',
     'domain' => null,
-    'secure' => false,
+    'secure' => null,
     'http_only' => true,
     'same_site' => 'lax',
     'partitioned' => false,
