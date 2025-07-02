@@ -25,50 +25,34 @@ $config->set('app', [
 ]);
 
 $config->set('database', [
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => 'sqlite',
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => '/home/1486247.cloudwaysapps.com/tvhxmzcvgt/public_html/database/database.sqlite',
             'prefix' => '',
-            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-        ],
-        'mysql' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
+            'foreign_key_constraints' => true,
         ],
     ],
 ]);
 
 $config->set('session', [
-    'driver' => env('SESSION_DRIVER', 'file'),
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'driver' => 'file',
+    'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
     'files' => storage_path('framework/sessions'),
-    'connection' => env('SESSION_CONNECTION'),
-    'table' => 'sessions',
-    'store' => env('SESSION_STORE'),
     'lottery' => [2, 100],
-    'cookie' => env('SESSION_COOKIE', 'laravel_session'),
+    'cookie' => 'laravel_session',
     'path' => '/',
-    'domain' => env('SESSION_DOMAIN'),
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'domain' => null,
+    'secure' => false,
     'http_only' => true,
     'same_site' => 'lax',
 ]);
 
 $config->set('cache', [
-    'default' => env('CACHE_DRIVER', 'file'),
+    'default' => 'file',
     'stores' => [
         'file' => [
             'driver' => 'file',
@@ -79,7 +63,7 @@ $config->set('cache', [
             'serialize' => false,
         ],
     ],
-    'prefix' => env('CACHE_PREFIX', 'laravel_cache'),
+    'prefix' => 'laravel_cache',
 ]);
 
 $config->set('view', [
