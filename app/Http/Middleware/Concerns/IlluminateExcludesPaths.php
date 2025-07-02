@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware\Concerns;
+namespace Illuminate\Foundation\Http\Middleware\Concerns;
 
 trait ExcludesPaths
 {
