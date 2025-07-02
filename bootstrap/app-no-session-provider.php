@@ -53,6 +53,13 @@ $config->set('cache', [
     'prefix' => 'laravel_cache',
 ]);
 
+// إعدادات translation
+$config->set('translation', [
+    'locale' => 'ar',
+    'fallback_locale' => 'en',
+    'path' => dirname(__DIR__) . '/lang',
+]);
+
 // تسجيل config
 $app->instance('config', $config);
 
@@ -71,6 +78,7 @@ $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(\Illuminate\Cache\CacheServiceProvider::class);
 $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
 $app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
+$app->register(\Illuminate\Translation\TranslationServiceProvider::class);
 $app->register(\Illuminate\Cookie\CookieServiceProvider::class);
 $app->register(\Illuminate\Validation\ValidationServiceProvider::class);
 $app->register(\Illuminate\Auth\AuthServiceProvider::class);
