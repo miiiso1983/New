@@ -18,9 +18,9 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
         // \Illuminate\Http\Middleware\HandleCors::class, // معطل مؤقتاً لحل مشكلة pipeline
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-        \App\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \App\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class, // استخدام الكلاس الأصلي
+        \Illuminate\Foundation\Http\Middleware\TrimStrings::class, // استخدام الكلاس الأصلي
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class, // استخدام الكلاس الأصلي
         \App\Http\Middleware\SetLocale::class,
     ];
 
