@@ -43,7 +43,7 @@ $config->set('session', [
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => storage_path('framework/sessions'),
+    'files' => dirname(__DIR__) . '/storage/framework/sessions',
     'lottery' => [2, 100],
     'cookie' => 'laravel_session',
     'path' => '/',
@@ -59,7 +59,7 @@ $config->set('cache', [
     'stores' => [
         'file' => [
             'driver' => 'file',
-            'path' => storage_path('framework/cache/data'),
+            'path' => dirname(__DIR__) . '/storage/framework/cache/data',
         ],
     ],
     'prefix' => 'laravel_cache',
@@ -68,9 +68,9 @@ $config->set('cache', [
 // إعدادات View
 $config->set('view', [
     'paths' => [
-        resource_path('views'),
+        dirname(__DIR__) . '/resources/views',
     ],
-    'compiled' => storage_path('framework/views'),
+    'compiled' => dirname(__DIR__) . '/storage/framework/views',
 ]);
 
 // إعدادات Filesystems
@@ -79,12 +79,12 @@ $config->set('filesystems', [
     'disks' => [
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => dirname(__DIR__) . '/storage/app',
             'throw' => false,
         ],
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => dirname(__DIR__) . '/storage/app/public',
             'url' => 'https://phplaravel-1486247-5658490.cloudwaysapps.com/storage',
             'visibility' => 'public',
             'throw' => false,
