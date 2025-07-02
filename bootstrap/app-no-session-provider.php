@@ -60,6 +60,26 @@ $config->set('translation', [
     'path' => dirname(__DIR__) . '/lang',
 ]);
 
+// إعدادات session
+$config->set('session', [
+    'driver' => 'file',
+    'lifetime' => 120,
+    'expire_on_close' => false,
+    'encrypt' => false,
+    'files' => dirname(__DIR__) . '/storage/framework/sessions',
+    'connection' => null,
+    'table' => 'sessions',
+    'store' => null,
+    'lottery' => [2, 100],
+    'cookie' => 'laravel_session',
+    'path' => '/',
+    'domain' => null,
+    'secure' => null,
+    'http_only' => true,
+    'same_site' => 'lax',
+    'partitioned' => false,
+]);
+
 // إعدادات cookie
 $config->set('cookie', [
     'name' => 'laravel_session',
@@ -121,6 +141,13 @@ $app->singleton('session.store', function ($app) {
 // تسجيل Session Manager يدوياً (صحيح للـ middleware)
 $app->singleton('session', function ($app) {
     $manager = new \Illuminate\Session\SessionManager($app);
+
+    // إضافة session config مباشرة
+    $config = $app->make('config');
+    $config->set('session.driver', 'file');
+    $config->set('session.files', dirname(__DIR__) . '/storage/framework/sessions');
+    $config->set('session.lifetime', 120);
+    $config->set('session.cookie', 'laravel_session');
 
     // تسجيل file driver يدوياً
     $manager->extend('file', function ($app) {
