@@ -118,9 +118,26 @@ $app->singleton('session.store', function ($app) {
     return $store;
 });
 
-// تسجيل Session Manager يدوياً (بدون driver resolution)
+// تسجيل Session Manager يدوياً (صحيح للـ middleware)
 $app->singleton('session', function ($app) {
-    return $app->make('session.store');
+    $manager = new \Illuminate\Session\SessionManager($app);
+
+    // تسجيل file driver يدوياً
+    $manager->extend('file', function ($app) {
+        $handler = $app->make('session.handler');
+        return new \Illuminate\Session\Store('laravel_session', $handler);
+    });
+
+    return $manager;
+});
+
+// تسجيل Session Manager alias
+$app->alias('session', \Illuminate\Session\SessionManager::class);
+
+// تحديث session.store ليستخدم SessionManager
+$app->singleton('session.store', function ($app) {
+    $manager = $app->make('session');
+    return $manager->driver('file');
 });
 
 // تسجيل Session Contract
@@ -130,7 +147,6 @@ $app->singleton(\Illuminate\Contracts\Session\Session::class, function ($app) {
 
 // تسجيل Cookie services يدوياً
 $app->singleton('cookie', function ($app) {
-    $config = $app->make('config');
     return new \Illuminate\Cookie\CookieJar();
 });
 
