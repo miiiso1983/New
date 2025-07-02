@@ -16,7 +16,7 @@ try {
 
     // Bootstrap Laravel and handle the request...
     /** @var Application $app */
-    $app = require_once __DIR__.'/../bootstrap/app-session-fixed.php';
+    $app = require_once __DIR__.'/../bootstrap/app-no-session-provider.php';
 
     // استخدام الطريقة التقليدية بدلاً من handleRequest
     $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
