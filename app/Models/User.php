@@ -8,13 +8,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-use Spatie\Permission\Traits\HasRoles;
+// use Spatie\Permission\Traits\HasRoles; // معطل مؤقتاً
 use App\Traits\TenantScoped;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, TenantScoped;
+    use HasFactory, Notifiable, HasApiTokens, TenantScoped; // إزالة HasRoles مؤقتاً
 
     /**
      * The attributes that are mass assignable.
@@ -94,46 +94,64 @@ class User extends Authenticatable
         return $this->hasMany(ReturnOrder::class, 'processed_by');
     }
 
-    // دوال مساعدة للصلاحيات
+    // دوال مساعدة للصلاحيات (مبسطة بدون Spatie)
     public function isAdmin(): bool
     {
-        return $this->user_type === 'admin' || $this->hasRole('super_admin') || $this->hasRole('admin');
+        return $this->user_type === 'admin';
     }
 
     public function isManager(): bool
     {
-        return $this->user_type === 'manager' || $this->hasRole('manager');
+        return $this->user_type === 'manager';
     }
 
     public function isEmployee(): bool
     {
-        return $this->user_type === 'employee' || $this->hasRole('employee');
+        return $this->user_type === 'employee';
     }
 
     public function isCustomer(): bool
     {
-        return $this->user_type === 'customer' || $this->hasRole('customer');
+        return $this->user_type === 'customer';
     }
 
-    // دالة للحصول على جميع الصلاحيات (مباشرة + عبر الأدوار)
+    // دالة للحصول على جميع الصلاحيات (مبسطة)
     public function getAllPermissionNames(): array
     {
-        return $this->getAllPermissions()->pluck('name')->toArray();
+        return $this->getLegacyPermissions();
     }
 
-    // دالة للتحقق من صلاحية معينة مع fallback للنوع القديم
+    // دالة للتحقق من صلاحية معينة (مبسطة)
     public function hasPermissionTo($permission, $guardName = null): bool
     {
-        // استخدام Spatie Permission أولاً
-        if (method_exists(parent::class, 'hasPermissionTo')) {
-            $hasSpatie = parent::hasPermissionTo($permission, $guardName);
-            if ($hasSpatie) {
-                return true;
-            }
-        }
-
-        // Fallback للنظام القديم
+        // تجاهل $guardName في النسخة المبسطة
         return $this->hasLegacyPermission($permission);
+    }
+
+    // دالة مساعدة للحصول على الصلاحيات
+    private function getLegacyPermissions(): array
+    {
+        return match($this->user_type) {
+            'admin' => [
+                'dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete',
+                'employees.view', 'employees.create', 'employees.edit', 'employees.delete',
+                'orders.view', 'orders.create', 'orders.edit', 'orders.delete',
+                'invoices.view', 'invoices.create', 'invoices.edit', 'invoices.delete',
+                'reports.view', 'settings.view', 'settings.edit'
+            ],
+            'manager' => [
+                'dashboard.view', 'users.view', 'employees.view',
+                'orders.view', 'orders.create', 'orders.edit',
+                'invoices.view', 'invoices.create', 'reports.view'
+            ],
+            'employee' => [
+                'dashboard.view', 'orders.view', 'items.view'
+            ],
+            'customer' => [
+                'orders.view', 'orders.create', 'invoices.view'
+            ],
+            default => []
+        };
     }
 
     // دالة للتوافق مع النظام القديم
