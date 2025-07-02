@@ -82,6 +82,31 @@ $config->set('cache', [
     'prefix' => env('CACHE_PREFIX', 'laravel_cache'),
 ]);
 
+$config->set('view', [
+    'paths' => [
+        resource_path('views'),
+    ],
+    'compiled' => env('VIEW_COMPILED_PATH', storage_path('framework/views')),
+]);
+
+$config->set('filesystems', [
+    'default' => env('FILESYSTEM_DISK', 'local'),
+    'disks' => [
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+            'throw' => false,
+        ],
+        'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+    ],
+]);
+
 // تسجيل config في التطبيق
 $app->instance('config', $config);
 
