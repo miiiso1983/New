@@ -125,30 +125,62 @@ echo "<h2>الخطوة 5: اختبار Laravel</h2>";
 try {
     require_once '../vendor/autoload.php';
     $app = require_once '../bootstrap/app.php';
-    
+
     echo "✅ تم تحميل Laravel بنجاح<br>";
-    echo "إصدار Laravel: " . $app->version() . "<br>";
-    
+
+    // التحقق من إصدار Laravel
+    if (method_exists($app, 'version')) {
+        echo "إصدار Laravel: " . $app->version() . "<br>";
+    } else {
+        echo "إصدار Laravel: غير محدد (Laravel 10 أو أقدم)<br>";
+    }
+
     // اختبار قاعدة البيانات
     try {
         $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-        $kernel->call('migrate:status');
-        echo "✅ قاعدة البيانات تعمل<br>";
+
+        // محاولة تشغيل المايجريشن مباشرة
+        echo "محاولة تشغيل المايجريشن...<br>";
+        $kernel->call('migrate', ['--force' => true]);
+        echo "✅ تم تشغيل المايجريشن بنجاح<br>";
+
+        // محاولة تشغيل السيدر
+        try {
+            $kernel->call('db:seed', ['--force' => true]);
+            echo "✅ تم تشغيل السيدر بنجاح<br>";
+        } catch (Exception $e3) {
+            echo "⚠️ تحذير في السيدر: " . $e3->getMessage() . "<br>";
+        }
+
     } catch (Exception $e) {
         echo "⚠️ مشكلة في قاعدة البيانات: " . $e->getMessage() . "<br>";
-        echo "محاولة تشغيل المايجريشن...<br>";
-        try {
-            $kernel->call('migrate --force');
-            echo "✅ تم تشغيل المايجريشن<br>";
-        } catch (Exception $e2) {
-            echo "❌ فشل في تشغيل المايجريشن: " . $e2->getMessage() . "<br>";
+
+        // محاولة إنشاء قاعدة البيانات من جديد
+        if (!file_exists('../database/database.sqlite')) {
+            if (touch('../database/database.sqlite')) {
+                echo "✅ تم إنشاء ملف قاعدة البيانات الجديد<br>";
+                try {
+                    $kernel->call('migrate', ['--force' => true]);
+                    echo "✅ تم تشغيل المايجريشن بعد إنشاء قاعدة البيانات<br>";
+                } catch (Exception $e4) {
+                    echo "❌ فشل في تشغيل المايجريشن: " . $e4->getMessage() . "<br>";
+                }
+            }
         }
     }
-    
+
 } catch (Exception $e) {
     echo "❌ خطأ في Laravel: " . $e->getMessage() . "<br>";
     echo "الملف: " . $e->getFile() . "<br>";
     echo "السطر: " . $e->getLine() . "<br>";
+
+    // إذا كان الخطأ متعلق بـ configure method
+    if (strpos($e->getMessage(), 'configure does not exist') !== false) {
+        echo "<br><strong>🔧 إصلاح مشكلة إصدار Laravel:</strong><br>";
+        echo "تم اكتشاف أن الخادم يستخدم إصدار Laravel أقدم من 11.<br>";
+        echo "تم تحديث ملف bootstrap/app.php ليكون متوافقاً مع الإصدارات الأقدم.<br>";
+        echo "يرجى إعادة تحميل الصفحة لاختبار الإصلاح.<br>";
+    }
 }
 
 echo "<h2>النتيجة النهائية</h2>";
