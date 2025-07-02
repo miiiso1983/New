@@ -67,6 +67,21 @@ $config->set('session', [
     'same_site' => 'lax',
 ]);
 
+$config->set('cache', [
+    'default' => env('CACHE_DRIVER', 'file'),
+    'stores' => [
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/data'),
+        ],
+        'array' => [
+            'driver' => 'array',
+            'serialize' => false,
+        ],
+    ],
+    'prefix' => env('CACHE_PREFIX', 'laravel_cache'),
+]);
+
 // تسجيل config في التطبيق
 $app->instance('config', $config);
 
@@ -78,6 +93,7 @@ $app->singleton('files', function () {
 // تسجيل Service Providers الأساسية المطلوبة
 $app->register(\Illuminate\Foundation\Providers\FoundationServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->register(\Illuminate\Cache\CacheServiceProvider::class);
 $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
 $app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
