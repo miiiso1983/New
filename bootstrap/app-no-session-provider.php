@@ -60,6 +60,18 @@ $config->set('translation', [
     'path' => dirname(__DIR__) . '/lang',
 ]);
 
+// إعدادات cookie
+$config->set('cookie', [
+    'name' => 'laravel_session',
+    'lifetime' => 120,
+    'path' => '/',
+    'domain' => null,
+    'secure' => false,
+    'http_only' => true,
+    'same_site' => 'lax',
+    'raw' => false,
+]);
+
 // تسجيل config
 $app->instance('config', $config);
 
@@ -114,6 +126,20 @@ $app->singleton('session', function ($app) {
 // تسجيل Session Contract
 $app->singleton(\Illuminate\Contracts\Session\Session::class, function ($app) {
     return $app->make('session.store');
+});
+
+// تسجيل Cookie services يدوياً
+$app->singleton('cookie', function ($app) {
+    $config = $app->make('config');
+    return new \Illuminate\Cookie\CookieJar();
+});
+
+$app->singleton(\Illuminate\Contracts\Cookie\Factory::class, function ($app) {
+    return $app->make('cookie');
+});
+
+$app->singleton(\Illuminate\Contracts\Cookie\QueueingFactory::class, function ($app) {
+    return $app->make('cookie');
 });
 
 // تسجيل MaintenanceMode service يدوياً
