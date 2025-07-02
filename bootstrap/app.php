@@ -41,7 +41,10 @@ $config->set('session', [
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => storage_path('framework/sessions'),
+    'files' => dirname(__DIR__) . '/storage/framework/sessions',
+    'connection' => null,
+    'table' => 'sessions',
+    'store' => null,
     'lottery' => [2, 100],
     'cookie' => 'laravel_session',
     'path' => '/',
@@ -49,6 +52,7 @@ $config->set('session', [
     'secure' => false,
     'http_only' => true,
     'same_site' => 'lax',
+    'partitioned' => false,
 ]);
 
 $config->set('cache', [
@@ -56,7 +60,7 @@ $config->set('cache', [
     'stores' => [
         'file' => [
             'driver' => 'file',
-            'path' => storage_path('framework/cache/data'),
+            'path' => dirname(__DIR__) . '/storage/framework/cache/data',
         ],
         'array' => [
             'driver' => 'array',
@@ -68,23 +72,23 @@ $config->set('cache', [
 
 $config->set('view', [
     'paths' => [
-        resource_path('views'),
+        dirname(__DIR__) . '/resources/views',
     ],
-    'compiled' => env('VIEW_COMPILED_PATH', storage_path('framework/views')),
+    'compiled' => dirname(__DIR__) . '/storage/framework/views',
 ]);
 
 $config->set('filesystems', [
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => 'local',
     'disks' => [
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => dirname(__DIR__) . '/storage/app',
             'throw' => false,
         ],
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'root' => dirname(__DIR__) . '/storage/app/public',
+            'url' => 'https://phplaravel-1486247-5658490.cloudwaysapps.com/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
