@@ -100,8 +100,12 @@ $app->singleton('files', function () {
     return new \Illuminate\Filesystem\Filesystem();
 });
 
-// تسجيل Facade Application
+// تهيئة Facades مبكراً
+\Illuminate\Support\Facades\Facade::clearResolvedInstances();
 \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
+
+// تسجيل aliases للـ Facades
+$app->withFacades();
 
 // تسجيل Service Providers الأساسية المطلوبة
 $app->register(\Illuminate\Foundation\Providers\FoundationServiceProvider::class);
@@ -140,5 +144,11 @@ if (class_exists('App\Providers\AppServiceProvider')) {
 if (class_exists('App\Providers\RouteServiceProvider')) {
     $app->register(App\Providers\RouteServiceProvider::class);
 }
+
+// تأكيد تهيئة Facades مرة أخرى بعد تسجيل جميع Service Providers
+\Illuminate\Support\Facades\Facade::setFacadeApplication($app);
+
+// تهيئة Application
+$app->boot();
 
 return $app;
