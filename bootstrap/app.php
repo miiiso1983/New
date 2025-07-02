@@ -124,6 +124,7 @@ $app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\View\ViewServiceProvider::class);
 $app->register(\Illuminate\Cookie\CookieServiceProvider::class);
+$app->register(\Illuminate\Validation\ValidationServiceProvider::class);
 $app->register(\Illuminate\Auth\AuthServiceProvider::class);
 $app->register(\Illuminate\Hashing\HashServiceProvider::class);
 $app->register(\Illuminate\Translation\TranslationServiceProvider::class);
