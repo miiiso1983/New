@@ -92,7 +92,7 @@ $config->set('filesystems', [
     ],
 ]);
 
-// تسجيل config في التطبيق
+// تسجيل config في التطبيق أولاً
 $app->instance('config', $config);
 
 // تسجيل files service يدوياً
@@ -104,8 +104,10 @@ $app->singleton('files', function () {
 \Illuminate\Support\Facades\Facade::clearResolvedInstances();
 \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
-// تسجيل Service Providers الأساسية المطلوبة
+// تسجيل FoundationServiceProvider أولاً لضمان توفر helper functions
 $app->register(\Illuminate\Foundation\Providers\FoundationServiceProvider::class);
+
+// تسجيل Service Providers الأساسية المطلوبة (FoundationServiceProvider تم تسجيله مسبقاً)
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(\Illuminate\Cache\CacheServiceProvider::class);
 $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
